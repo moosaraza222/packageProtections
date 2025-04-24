@@ -1,0 +1,25 @@
+{
+  "name": "aqua-package-protection",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "info": "shopify app info",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy"
+  },
+  "dependencies": {
+    "@shopify/shopify_function": "0.1.0",
+    "javy": "0.1.1"
+  },
+  "trustedDependencies": [
+    "@shopify/plugin-cloudflare"
+  ],
+  "author": "PC",
+  "private": true,
+  "workspaces": [
+    "extensions/*"
+  ]
+}

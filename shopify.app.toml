@@ -1,0 +1,24 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "4aaa9ee7e7acd67d60c4d62baa6b3c78"
+name = "aqua-package-protection"
+handle = "aqua-package-protection"
+application_url = "https://example.com/"
+embedded = true
+
+[build]
+dev_store_url = "app-test-store-qr.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = ""
+
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]
+
+[webhooks]
+api_version = "2025-04"
+
+[pos]
+embedded = false
