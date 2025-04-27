@@ -40,20 +40,31 @@ export function run(input) {
   // Calculate the actual cart value by summing the cost of each line
   let cartValue = 0;
   
+  console.log("Cart lines excluding protection:", cartLinesExcludingProtection.length);
+  
   for (const line of cartLinesExcludingProtection) {
     if (line.cost && line.cost.totalAmount) {
-      cartValue += parseFloat(line.cost.totalAmount.amount);
+      const lineAmount = parseFloat(line.cost.totalAmount.amount);
+      console.log("Line amount:", lineAmount, "for product:", line.merchandise);
+      cartValue += lineAmount;
+    } else {
+      console.log("Missing cost information for line:", line);
     }
   }
   
+  console.log("Total cart value:", cartValue);
+  
   // Calculate 2% of the cart value
   const rawPrice = cartValue * 0.02;
+  console.log("Raw price (2% of cart):", rawPrice);
   
   // Round to the nearest whole number
   const protectionPrice = Math.round(rawPrice);
+  console.log("Rounded price:", protectionPrice);
   
   // Ensure minimum price of 1
   const finalPrice = Math.max(1, protectionPrice);
+  console.log("Final price:", finalPrice);
   
   // Return an update operation to set the price of the package protection
   return {

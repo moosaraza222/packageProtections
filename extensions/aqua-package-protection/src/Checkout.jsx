@@ -12,40 +12,40 @@ import {
 } from "@shopify/ui-extensions-react/checkout";
 import React from "react";
 // Use the post-purchase.checkout.cart-line-item.render-after target to appear below discount code
-export default reactExtension("purchase.checkout.cart-line-list.render-after", () => (
+export default reactExtension("purchase.checkout.block.render", () => (
   <Extension />
 ));
 
 function Extension() {
-  const { i18n } = useApi();
+  const { i18n, sessionToken } = useApi();
   const applyCartLinesChange = useApplyCartLinesChange();
   const cartLines = useCartLines();
   const totalAmount = useTotalAmount();
   const attributes = useAttributes();
-  console.log(attributes, "attributes")
-  
-  
-  // Check if package protection is already in the cart
+
+
   const packageProtectionLine = cartLines.find(line => 
-    line.merchandise.id === "gid://shopify/ProductVariant/44130745417914" ||
-    line.merchandise.product?.title === "aqua package protection"
+    line.attributes.some(attr => attr.key === 'package_protection' && attr.value === 'true')
   );
-  
-console.log(packageProtectionLine, "packageProtectionLine")
+
+console.log(packageProtectionLine,'checking package protection');
+
   const isPackageProtectionEnabled = attributes.some(
     attr => attr.key === "packageProtected" && attr.value === "Added"
   );
-  console.log(isPackageProtectionEnabled, "isPackageProtectionEnabled")
-  // Add or remove package protection based on attribute
+
+
+  // Handle package protection state
   React.useEffect(() => {
+    // If protection is enabled but we have 0 items, add one
     if (isPackageProtectionEnabled && !packageProtectionLine) {
-      // Add package protection if attribute is set but product is not in cart
+    
       addPackageProtection();
-    } else if (!isPackageProtectionEnabled && packageProtectionLine) {
-      // Remove package protection if attribute is not set but product is in cart
-      removePackageProtection();
+    }else if(!isPackageProtectionEnabled && packageProtectionLine){
+      removePackageProtection(packageProtectionLine);
     }
-  }, [isPackageProtectionEnabled, packageProtectionLine]);
+ 
+  }, [isPackageProtectionEnabled]);
 
   async function addPackageProtection() {
     try {
@@ -64,23 +64,23 @@ console.log(packageProtectionLine, "packageProtectionLine")
     }
   }
 
-  async function removePackageProtection() {
+  async function removePackageProtection(line) {
+    console.log('removing package protection');
     try {
-      if (packageProtectionLine) {
-        const result = await applyCartLinesChange({
-          type: 'removeCartLine',
-          id: packageProtectionLine.id,
-          quantity: packageProtectionLine.quantity
-        });
-        
-        if (result.type === 'error') {
-          console.error("Error removing package protection:", result.message);
-        }
+      const result = await applyCartLinesChange({
+        type: 'removeCartLine',
+        id: line.id,
+        quantity: line.quantity
+      }); 
+      if (result.type === 'error') {
+        console.error(result.message);
       }
     } catch (error) {
-      console.error("Exception removing package protection:", error);
+      console.error(error);
     }
-  }
+      
+    }
+  
 
   // Only render information if package protection is enabled
   if (isPackageProtectionEnabled) {
