@@ -51,7 +51,7 @@ console.log(packageProtectionLine,'checking package protection');
     try {
       const result = await applyCartLinesChange({
         type: 'addCartLine',
-        merchandiseId: 'gid://shopify/ProductVariant/44130745417914',
+        merchandiseId: 'gid://shopify/ProductVariant/41998665416932',
         quantity: 1,
         attributes: [{ key: 'package_protection', value: 'true' }]
       });

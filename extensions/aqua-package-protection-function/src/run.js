@@ -18,7 +18,7 @@ const NO_CHANGES = {
  */
 export function run(input) {
   // Package protection product title
-  const PACKAGE_PROTECTION_TITLE = "aqua package protection";
+  const PACKAGE_PROTECTION_TITLE = "AQUA Package Protection";
   
   // Find the package protection line by product title (case insensitive)
   const packageProtectionLine = input.cart.lines.find(line => 
