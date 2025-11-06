@@ -18,8 +18,8 @@ const NO_CHANGES = {
  */
 export function run(input) {
   // Package protection product title
-  const PACKAGE_PROTECTION_TITLE = "AQUA Package Protection";
-  
+  const PACKAGE_PROTECTION_TITLE = "aquapackageprotection";
+  console.log(input.cart.lines,'cart lines')
   // Find the package protection line by product title (case insensitive)
   const packageProtectionLine = input.cart.lines.find(line => 
     line.merchandise.__typename === "ProductVariant" && 
@@ -27,6 +27,7 @@ export function run(input) {
   );
   
   // If package protection is not in the cart, return no changes
+  console.log(packageProtectionLine,'package protection line')
   if (!packageProtectionLine) {
     return NO_CHANGES;
   }

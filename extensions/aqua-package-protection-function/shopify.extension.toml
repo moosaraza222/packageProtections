@@ -1,8 +1,11 @@
-api_version = "2025-01"
+api_version = "2025-07"
 
 [[extensions]]
 name = "t:name"
 handle = "aqua-package-protection-function"
+
+uid = "9d52858d-b04d-0d77-b1bf-c0a28c8c5a0e4f610bfe"
+
 type = "function"
 
 description = "t:description"

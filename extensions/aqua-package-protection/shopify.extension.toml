@@ -8,6 +8,13 @@ api_version = "2025-04"
 [[extensions]]
 name = "aqua-package-protection"
 handle = "aqua-package-protection"
+
+
+
+uid = "4e162edc-df26-42cb-94a4-8eccd7d48d076666f4be"
+
+
+
 type = "ui_extension"
 
 
