@@ -41,6 +41,20 @@ const SYSTEM_PRODUCTS_MAP = {
       "gid://shopify/ProductVariant/32680535523459"   // Boar Bristle Brush
     ]
   },
+  // Slim Machine Weft System Product - MUST come before "Machine Weft" for proper detection
+  "slim-machine-weft": {
+    name: "Slim Machine Weft",  // This name is used to detect products in cart
+    tools: [
+      "gid://shopify/ProductVariant/32680539160707",  // Prep Shampoo 33.8 oz
+      "gid://shopify/ProductVariant/32680539783299",  // Deluxe Pliers
+      "gid://shopify/ProductVariant/32680540340355",  // Loop Tool
+      "gid://shopify/ProductVariant/32680539390083",  // Silicone Beads - 150 pcs
+      "gid://shopify/ProductVariant/32680545255555",  // Thread
+      "gid://shopify/ProductVariant/42072169939172",  // Nylon Thread
+      "gid://shopify/ProductVariant/32680545190019",  // Weft Needles - 2 pcs/pack
+      "gid://shopify/ProductVariant/42072185045220"   // Small Scissors
+    ]
+  },
   // Machine Weft System Product
   "machine-weft": {
     name: "Machine Weft",  // This name is used to detect products in cart
@@ -123,6 +137,20 @@ const SYSTEM_PRODUCTS_MAP = {
       "gid://shopify/ProductVariant/32680540307587",  // Bond Breaking Pliers
       "gid://shopify/ProductVariant/32680547876995",  // Hair Grippers (2/pk)
       "gid://shopify/ProductVariant/46308159979748"   // Clips - 4 pcs/pack
+    ]
+  },
+  // Slim Machine Weft System Product
+  "slim-machine-weft": {
+    name: "Slim Machine Weft",  // This name is used to detect products in cart
+    tools: [
+      "gid://shopify/ProductVariant/32680539160707",  // Prep Shampoo 33.8 oz
+      "gid://shopify/ProductVariant/32680539783299",  // Deluxe Pliers
+      "gid://shopify/ProductVariant/32680540340355",  // Loop Tool
+      "gid://shopify/ProductVariant/32680539390083",  // Silicone Beads - 150 pcs
+      "gid://shopify/ProductVariant/32680545255555",  // Thread
+      "gid://shopify/ProductVariant/42072169939172",  // Nylon Thread
+      "gid://shopify/ProductVariant/32680545190019",  // Weft Needles - 2 pcs/pack
+      "gid://shopify/ProductVariant/42072185045220"   // Small Scissors
     ]
   }
 };
@@ -308,18 +336,35 @@ function Extension() {
 
     // Get all product titles and variant IDs in the cart
     const cartItems = cartLines.map(line => ({
-      title: line.merchandise.title.toLowerCase(),
+      productTitle: line.merchandise.product?.title?.toLowerCase() || '',
+      variantTitle: line.merchandise.title?.toLowerCase() || '',
       variantId: line.merchandise.id
     }));
     
     console.log("Cart items:", cartItems);
 
-    // Find system products in cart by matching product titles (case-insensitive)
-    const systemProductsInCart = Object.entries(SYSTEM_PRODUCTS_MAP).filter(([variantId, config]) => {
+    // Find system products in cart by matching product titles or variant titles (case-insensitive)
+    // Sort by name length (longest first) to match more specific names before generic ones
+    const sortedSystemProducts = Object.entries(SYSTEM_PRODUCTS_MAP).sort((a, b) => 
+      b[1].name.length - a[1].name.length
+    );
+    
+    const systemProductsInCart = [];
+    const matchedProductTitles = new Set();
+    
+    for (const [variantId, config] of sortedSystemProducts) {
       const systemName = config.name.toLowerCase();
-      // Check if any cart item title contains the system product name
-      return cartItems.some(item => item.title.includes(systemName));
-    });
+      const matchedItem = cartItems.find(item => {
+        const titleToCheck = item.productTitle || item.variantTitle;
+        return titleToCheck.includes(systemName) && !matchedProductTitles.has(titleToCheck);
+      });
+      
+      if (matchedItem) {
+        systemProductsInCart.push([variantId, config]);
+        const titleToCheck = matchedItem.productTitle || matchedItem.variantTitle;
+        matchedProductTitles.add(titleToCheck);
+      }
+    }
 
     console.log("System products found:", systemProductsInCart.map(([id, config]) => config.name));
 
