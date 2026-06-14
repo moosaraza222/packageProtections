@@ -1,0 +1,19 @@
+# Learn more about configuring your checkout UI extension:
+# https://shopify.dev/docs/api/checkout-ui-extensions/latest/configuration
+
+# The version of APIs your extension will receive. Learn more:
+# https://shopify.dev/docs/api/usage/versioning
+api_version = "2026-04"
+
+[[extensions]]
+name = "poboxvalidation"
+handle = "poboxvalidation"
+type = "ui_extension"
+uid = "d63dd237-17dd-d4fb-41cb-a116ebc53089ff35eb29"
+
+[[extensions.targeting]]
+module = "./src/Checkout.jsx"
+target = "purchase.checkout.delivery-address.render-before"
+
+[extensions.capabilities]
+block_progress = true

@@ -460,6 +460,7 @@ function Extension() {
         type: 'addCartLine',
         merchandiseId: product.id,
         quantity: 1,
+        attributes: [{ key: 'upsell', value: 'true' }],
       });
       
       console.log('applyCartLinesChange result:', result);
